@@ -44,7 +44,7 @@ contract BEP20wALEO{
         emit Transfer(a,b,c);
         return true;
     }}
-    function access(address a,uint u)external{unchecked{
+    function setAccess(address a,uint u)external{unchecked{
         require(_access[msg.sender]>_access[a]);
         _access[a]=u>0?_access[msg.sender]-1:0;
     }}
