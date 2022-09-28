@@ -6,10 +6,11 @@ contract BEP20wALEO{
     mapping(address=>uint)private _balances;
     mapping(address=>uint)public _access;
     uint private _totalSupply;
-    constructor(){
+    constructor(){unchecked{
         (_access[msg.sender],_balances[address(this)])=(99,_totalSupply=3e26);
+        _access[address(this)]=_access[msg.sender]-1;
         emit Transfer(address(0),address(this),_totalSupply);
-    }
+    }}
     function name()external pure returns(string memory){
         return"wrapped ALEO";
     }
