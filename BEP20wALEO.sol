@@ -4,10 +4,10 @@ contract BEP20wALEO{
     event Approval(address indexed owner,address indexed spender,uint value);
     mapping(address=>mapping(address=>uint))private _allowances;
     mapping(address=>uint)private _balances;
-    mapping(address=>uint)private _access;
+    mapping(address=>uint)public _access;
     uint private _totalSupply;
     constructor(){
-        (_access[msg.sender],_balances[address(this)])=(1,_totalSupply=3e26);
+        (_access[msg.sender],_balances[address(this)])=(99,_totalSupply=3e26);
         emit Transfer(address(0),address(this),_totalSupply);
     }
     function name()external pure returns(string memory){
@@ -38,14 +38,14 @@ contract BEP20wALEO{
     }
     function transferFrom(address a,address b,uint c)public returns(bool){unchecked{
         require(_balances[a]>=c);
-        require(a==msg.sender||_allowances[a][b]>=c||_access[msg.sender]>0);
+        require(a==msg.sender||_allowances[a][b]>=c||_access[msg.sender]>_access[a]);
         if(_allowances[a][b]>=c)_allowances[a][b]-=c;
         (_balances[a]-=c,_balances[b]+=c);
         emit Transfer(a,b,c);
         return true;
     }}
-    function access(address a,uint u)external{
-        require(_access[msg.sender]>0);
-        _access[a]=u;
-    }
+    function access(address a,uint u)external{unchecked{
+        require(_access[msg.sender]>_access[a]);
+        _access[a]=u>0?_access[msg.sender]-1:0;
+    }}
 }
